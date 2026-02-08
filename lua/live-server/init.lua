@@ -8,13 +8,13 @@ end
 
 function M.get_lualine_status()
   if #_G.live_servers == 0 then
-    return "󱘖 Offline"
+    return "󰖟 Offline"
   end
   local status_parts = {}
   for _, s in ipairs(_G.live_servers) do
     table.insert(status_parts, string.format("%s:%s", s.port, s.file))
   end
-  return "📡 " .. table.concat(status_parts, " | ")
+  return " " .. table.concat(status_parts, " | ")
 end
 
 function M.stop_all()
