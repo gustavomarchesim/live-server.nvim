@@ -41,10 +41,9 @@ The plugin uses a central control panel for all operations.
 
 ### Command
 You can also open the menu via command line:
-
 ```vim
-:LiveServer```
-
+:LiveServer
+```
 
 ## 🛠️ Requirements
 live-server must be installed globally:
