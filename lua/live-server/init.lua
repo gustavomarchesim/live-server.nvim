@@ -7,11 +7,14 @@ local function notify(msg, level)
 end
 
 function M.get_lualine_status()
-  local count = #_G.live_servers
-  if count > 0 then
-    return "🌐 LIVE:" .. count
+  if #_G.live_servers == 0 then
+    return "󱘖 Offline"
   end
-  return ""
+  local status_parts = {}
+  for _, s in ipairs(_G.live_servers) do
+    table.insert(status_parts, string.format("%s:%s", s.port, s.file))
+  end
+  return "📡 " .. table.concat(status_parts, " | ")
 end
 
 function M.stop_all()
@@ -95,7 +98,7 @@ function M.setup(opts)
       local config = lualine.get_config()
       table.insert(config.sections.lualine_x, {
         function() return M.get_lualine_status() end,
-        color = { fg = "#ff9e64" },
+        color = { fg = "#98be65" },
       })
       lualine.setup(config)
     end
