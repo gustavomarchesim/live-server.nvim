@@ -6,6 +6,14 @@ local function notify(msg, level)
   vim.notify(msg, level, { title = "Live Server" })
 end
 
+function M.get_lualine_status()
+  local count = #_G.live_servers
+  if count > 0 then
+    return "🌐 LIVE:" .. count
+  end
+  return ""
+end
+
 function M.stop_all()
   for _, s in ipairs(_G.live_servers) do
     vim.fn.jobstop(s.id)
@@ -25,11 +33,11 @@ function M.stop_specific()
   for _, s in ipairs(_G.live_servers) do
     table.insert(options, string.format("Port: %s | File: %s", s.port, s.file))
   end
-  table.insert(options, "STOP ALL SERVERS")
+  table.insert(options, "🛑 STOP ALL SERVERS")
 
   vim.ui.select(options, { prompt = "Select server to stop:" }, function(choice, idx)
     if not choice then return end
-    if choice == "STOP ALL SERVERS" then
+    if choice == "🛑 STOP ALL SERVERS" then
       M.stop_all()
     else
       local server = _G.live_servers[idx]
@@ -75,10 +83,23 @@ function M.start(file, port)
 end
 
 function M.setup(opts)
+  opts = opts or {}
   vim.api.nvim_create_user_command("LiveServer", function() M.menu() end, {})
 
-  local key = (opts and opts.key) or "<leader>ls"
+  local key = opts.key or "<leader>ls"
   vim.keymap.set("n", key, function() M.menu() end, { silent = true, desc = "Live Server Manager" })
+
+  if opts.lualine ~= false then
+    local status_ok, lualine = pcall(require, "lualine")
+    if status_ok then
+      local config = lualine.get_config()
+      table.insert(config.sections.lualine_x, {
+        function() return M.get_lualine_status() end,
+        color = { fg = "#ff9e64" },
+      })
+      lualine.setup(config)
+    end
+  end
 
   vim.api.nvim_create_autocmd("VimLeavePre", {
     callback = function() M.stop_all() end
