@@ -21,12 +21,20 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   dependencies = { "nvim-telescope/telescope.nvim" }, -- Optional, for better UI
   opts = {
     key = "<leader>ls", -- Custom keybinding to open the menu
+    lualine = true,      -- Set to false to disable statusline integration
   },
   config = function(_, opts)
     require("live-server").setup(opts)
   end,
 }
 ```
+
+## 🌐 Status Line (Lualine)
+
+If you use lualine.nvim, the plugin will automatically inject itself into your lualine_x section.
+
+Offline: 󰖟 Offline (Gray) - No servers running.
+Online:   8080:index.html | 8081:test.html (Green) - Shows active ports and files.
 
 ## ⌨️ Usage
 

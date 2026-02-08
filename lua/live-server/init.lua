@@ -98,7 +98,10 @@ function M.setup(opts)
       local config = lualine.get_config()
       table.insert(config.sections.lualine_x, {
         function() return M.get_lualine_status() end,
-        color = { fg = "#98be65" },
+        color = function()
+          local active = #_G.live_servers > 0
+          return { fg = active and "#98be65" or "#5c6370" }
+        end,
       })
       lualine.setup(config)
     end
